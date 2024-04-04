@@ -22,7 +22,7 @@ class FilmResolver implements ResolverInterface<Film> {
     return await context.dataSources.starWarsService.getFilm(id);
   }
 
-  @FieldResolver()
+  @FieldResolver({ complexity: 10 })
   async characters(@Root() film: Film, @Ctx() context) {
     return await context.dataSources.starWarsService.getCharactersByIds(
       film.charactersIds

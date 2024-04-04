@@ -24,7 +24,7 @@ class CharacterResolver implements ResolverInterface<Character> {
     return await context.dataSources.starWarsService.getCharacter(id);
   }
 
-  @FieldResolver()
+  @FieldResolver({ complexity: 10 })
   async films(@Root() character: Character, @Ctx() context) {
     return await context.dataSources.starWarsService.getFilmsByIds(
       character.filmsIds
