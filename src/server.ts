@@ -1,36 +1,16 @@
+import "reflect-metadata";
 import { ApolloServer } from "@apollo/server";
 import { startStandaloneServer } from "@apollo/server/standalone";
-
-const typeDefs = `#graphql
-    type Film {
-        title: String
-        director: String
-    }
-
-    type Query {
-        films: [Film]
-    }
-`;
-
-const films = [
-  {
-    title: "Inception",
-    director: "Christopher Nolan",
-  },
-  {
-    title: "Interstellar",
-    director: "Christopher Nolan",
-  },
-];
-
-const resolvers = {
-  Query: {
-    films: () => films,
-  },
-};
+import { buildSchema } from "type-graphql";
+import FilmResolver from "./resolvers/film.resolver";
+import CharacterResolver from "./resolvers/character.resolver";
 
 export const listen = async (port: number) => {
-  const server = new ApolloServer({ typeDefs, resolvers });
+  const schema = await buildSchema({
+    resolvers: [FilmResolver, CharacterResolver],
+  });
+
+  const server = new ApolloServer({ schema });
   const { url } = await startStandaloneServer(server, {
     listen: {
       port: port,
