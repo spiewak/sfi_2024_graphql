@@ -12,6 +12,7 @@
   "license": "ISC",
   "dependencies": {
     "@apollo/server": "^4.10.2",
+    "axios": "^1.6.8",
     "class-validator": "^0.14.1",
     "graphql": "^16.8.1",
     "graphql-scalars": "^1.23.0",

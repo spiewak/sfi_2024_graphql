@@ -1,24 +1,19 @@
-import { Query, Resolver } from "type-graphql";
+import { Arg, Query, Resolver } from "type-graphql";
 import Film from "../schema/film.schema";
+import StarWarsService from "../services/star-wars.service";
 
 @Resolver()
 class FilmResolver {
   @Query(() => [Film])
   films() {
-    return [
-      {
-        title: "Inception",
-        director: "Christopher Nolan",
-        producer: "Emma Thomas",
-        releaseDate: "2010-07-16",
-      },
-      {
-        title: "Interstellar",
-        director: "Christopher Nolan",
-        producer: "Emma Thomas",
-        releaseDate: "2014-11-07",
-      },
-    ];
+    const starWarsService = new StarWarsService();
+    return starWarsService.getFilms();
+  }
+
+  @Query(() => Film)
+  film(@Arg("id") id: number) {
+    const starWarsService = new StarWarsService();
+    return starWarsService.getFilm(id);
   }
 }
 
