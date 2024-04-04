@@ -1,9 +1,34 @@
 import axios from "axios";
+import DataLoader from "dataloader";
 import Film from "../schema/film.schema";
 import Character from "../schema/character.schema";
 
 class StarWarsService {
   private readonly baseUrl = "https://swapi.dev/api";
+
+  private batchCharacters = new DataLoader(async (ids: number[]) => {
+    const characters = await Promise.all(
+      ids.map(
+        async (id) => (await axios.get(`${this.baseUrl}/people/${id}`)).data
+      )
+    );
+
+    const mappedCharacters = characters.map(this.characterMapper);
+
+    return mappedCharacters;
+  });
+
+  private batchFilms = new DataLoader(async (ids: number[]) => {
+    const films = await Promise.all(
+      ids.map(
+        async (id) => (await axios.get(`${this.baseUrl}/films/${id}`)).data
+      )
+    );
+
+    const mappedFilms = films.map(this.filmMapper);
+
+    return mappedFilms;
+  });
 
   private filmMapper(film: any): Film {
     return {
@@ -41,25 +66,19 @@ class StarWarsService {
   }
 
   async getCharacter(id: number) {
-    const result = (await axios.get(`${this.baseUrl}/people/${id}`)).data;
-    return this.characterMapper(result);
+    return (await this.batchCharacters.load(id)) as Character;
   }
 
   async getFilm(id: number) {
-    const result = (await axios.get(`${this.baseUrl}/films/${id}`)).data;
-    return this.filmMapper(result);
+    return (await this.batchFilms.load(id)) as Film;
   }
 
   async getFilmsByIds(ids: number[]) {
-    const films = await Promise.all(ids.map((id) => this.getFilm(id)));
-    return films;
+    return (await this.batchFilms.loadMany(ids)) as Film[];
   }
 
   async getCharactersByIds(ids: number[]) {
-    const characters = await Promise.all(
-      ids.map((id) => this.getCharacter(id))
-    );
-    return characters;
+    return (await this.batchCharacters.loadMany(ids)) as Character[];
   }
 }
 

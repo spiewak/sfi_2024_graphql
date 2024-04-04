@@ -1,5 +1,6 @@
 import {
   Arg,
+  Ctx,
   FieldResolver,
   Query,
   Resolver,
@@ -12,21 +13,20 @@ import StarWarsService from "../services/star-wars.service";
 @Resolver((type) => Character)
 class CharacterResolver implements ResolverInterface<Character> {
   @Query(() => [Character])
-  characters() {
-    const starWarsService = new StarWarsService();
-    return starWarsService.getCharacters();
+  async characters(@Ctx() context) {
+    return await context.dataSources.starWarsService.getCharacters();
   }
 
   @Query(() => Character)
-  character(@Arg("id") id: number) {
-    const starWarsService = new StarWarsService();
-    return starWarsService.getCharacter(id);
+  async character(@Arg("id") id: number, @Ctx() context) {
+    return await context.dataSources.starWarsService.getCharacter(id);
   }
 
   @FieldResolver()
-  films(@Root() character: Character) {
-    const starWarsService = new StarWarsService();
-    return starWarsService.getFilmsByIds(character.filmsIds);
+  async films(@Root() character: Character, @Ctx() context) {
+    return await context.dataSources.starWarsService.getFilmsByIds(
+      character.filmsIds
+    );
   }
 }
 
