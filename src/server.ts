@@ -12,6 +12,7 @@ import {
   getComplexity,
   simpleEstimator,
 } from "graphql-query-complexity";
+import { createSchema } from "./utils/createSchema";
 
 export interface ContextValue {
   req: Request;
@@ -22,9 +23,7 @@ export interface ContextValue {
 }
 
 export const listen = async (port: number) => {
-  const schema = await buildSchema({
-    resolvers: [FilmResolver, CharacterResolver],
-  });
+  const schema = await createSchema();
 
   const server = new ApolloServer({
     schema,

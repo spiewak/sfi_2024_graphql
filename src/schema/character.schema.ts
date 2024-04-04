@@ -16,7 +16,7 @@ class Character {
   name: string;
 
   @Field()
-  height: string;
+  height: number;
 
   @Field({ nullable: true })
   gender?: GenderEnum;

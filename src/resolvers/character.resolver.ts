@@ -20,7 +20,7 @@ class CharacterResolver implements ResolverInterface<Character> {
   }
 
   @Query(() => Character)
-  async character(@Arg("id") id: number, @Ctx() context) {
+  async character(@Arg("id", () => Int) id: number, @Ctx() context) {
     return await context.dataSources.starWarsService.getCharacter(id);
   }
 

@@ -2,6 +2,7 @@ import {
   Arg,
   Ctx,
   FieldResolver,
+  Int,
   Query,
   Resolver,
   ResolverInterface,
@@ -18,7 +19,7 @@ class FilmResolver implements ResolverInterface<Film> {
   }
 
   @Query(() => Film)
-  async film(@Arg("id") id: number, @Ctx() context) {
+  async film(@Arg("id", () => Int) id: number, @Ctx() context) {
     return await context.dataSources.starWarsService.getFilm(id);
   }
 
