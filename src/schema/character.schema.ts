@@ -1,5 +1,5 @@
 import { registerDecorator } from "class-validator";
-import { Field, ObjectType, registerEnumType } from "type-graphql";
+import { Field, Int, ObjectType, registerEnumType } from "type-graphql";
 import Film from "./film.schema";
 
 export enum GenderEnum {
